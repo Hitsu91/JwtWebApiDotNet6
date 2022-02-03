@@ -1,5 +1,8 @@
+using AutoMapper;
+using JwtWebApi.Config;
 using JwtWebApi.Data;
-using JwtWebApi.Services;
+using JwtWebApi.Services.AuthService;
+using JwtWebApi.Services.CharacterService;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.InMemory;
 
@@ -16,7 +19,11 @@ builder.Services.AddDbContext<DataContext>(
     opt => opt.UseInMemoryDatabase("Db")
 );
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ICharacterService, CharacterService>();
 
 var app = builder.Build();
 

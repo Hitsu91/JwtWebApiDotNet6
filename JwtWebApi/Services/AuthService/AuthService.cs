@@ -7,7 +7,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace JwtWebApi.Services;
+namespace JwtWebApi.Services.AuthService;
 
 public class AuthService : IAuthService
 {
@@ -52,7 +52,7 @@ public class AuthService : IAuthService
             throw new Exception("User not found");
         }
 
-       
+
         if (VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
         {
             var token = CreateToken(user);

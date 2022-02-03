@@ -1,6 +1,6 @@
 ﻿using JwtWebApi.DTOs.User;
 using JwtWebApi.Models;
-using JwtWebApi.Services;
+using JwtWebApi.Services.AuthService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;

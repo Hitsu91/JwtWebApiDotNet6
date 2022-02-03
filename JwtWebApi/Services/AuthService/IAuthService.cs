@@ -1,6 +1,6 @@
 ﻿using JwtWebApi.DTOs.User;
 
-namespace JwtWebApi.Services
+namespace JwtWebApi.Services.AuthService
 {
     public interface IAuthService
     {

@@ -10,4 +10,6 @@ public class DataContext : DbContext
     }
 
     public DbSet<User> Users { get; set; } = null!;
+
+    public DbSet<Character> Characters { get; set; } = null!;
 }
