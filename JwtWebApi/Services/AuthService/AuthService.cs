@@ -12,10 +12,12 @@ namespace JwtWebApi.Services.AuthService;
 public class AuthService : IAuthService
 {
     private readonly DataContext _ctx;
+    private readonly string _secret;
 
-    public AuthService(DataContext ctx)
+    public AuthService(DataContext ctx, IConfiguration config)
     {
         _ctx = ctx;
+        _secret = config["AppSettings:Token"];
     }
 
     public UserRegistrationResponse Register(UserRegistrationRequest user)
@@ -53,13 +55,13 @@ public class AuthService : IAuthService
         }
 
 
-        if (VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
+        if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
         {
-            var token = CreateToken(user);
-            return new UserLoginResponse(token);
+            throw new Exception("Bad credentials");
         }
 
-        throw new Exception("Bad credentials");
+        var token = CreateToken(user);
+        return new UserLoginResponse(token);
     }
 
     private string CreateToken(User user)
@@ -70,17 +72,14 @@ public class AuthService : IAuthService
             new Claim(ClaimTypes.Name, user.Username)
         };
 
-        // Conviene esternalizzare la chiave segreta
-        var secret = "Super secret very very long long men pikachu";
-        // Questo secret è importante per validare il token dell'utente
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secret));
+        var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
             Expires = DateTime.Now.AddDays(1),
-            SigningCredentials = creds
+            SigningCredentials = signingCredentials
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();

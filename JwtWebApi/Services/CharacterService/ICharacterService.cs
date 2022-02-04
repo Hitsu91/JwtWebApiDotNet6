@@ -5,13 +5,13 @@ namespace JwtWebApi.Services.CharacterService;
 
 public interface ICharacterService
 {
-    Task<List<Character>> GetCharacters();
+    Task<List<CharacterResponseDto>> GetAllCharacters();
 
-    Task<Character?> GetCharacterById(Guid id);
+    Task<CharacterResponseDto?> GetCharacterById(Guid id);
 
-    Task<Character> AddCharacter(CharacterRequestDto character);
+    Task<CharacterResponseDto> AddCharacter(CharacterRequestDto newCharacter);
 
-    Task<Character?> UpdateCharacter(Guid id, CharacterRequestDto character);
+    Task<CharacterResponseDto?> UpdateCharacter(Guid id, CharacterRequestDto updatedCharacter);
 
-    Task<Character?> DeleteCharacter(Guid id);
+    Task<CharacterResponseDto?> DeleteCharacter(Guid id);
 }

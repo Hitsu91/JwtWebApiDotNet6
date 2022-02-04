@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using JwtWebApi.Data;
 using JwtWebApi.DTOs.Character;
 using JwtWebApi.Models;
@@ -10,54 +11,68 @@ public class CharacterService : ICharacterService
 {
     private readonly DataContext _ctx;
     private readonly IMapper _mapper;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public CharacterService(DataContext ctx, IMapper mapper)
+    public CharacterService(DataContext ctx, IMapper mapper, IHttpContextAccessor httpContextAccessor)
     {
         _ctx = ctx;
         _mapper = mapper;
+        _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<Character> AddCharacter(CharacterRequestDto character)
+    public async Task<CharacterResponseDto> AddCharacter(CharacterRequestDto newCharacter)
     {
-        var newCharacter = _mapper.Map<Character>(character);
-        var savedCharacter = _ctx.Characters.Add(newCharacter);
+        var character = _mapper.Map<Character>(newCharacter);
+        character.User = await _ctx.Users.FindAsync(GetUserId());
+        
+        var savedCharacter = _ctx.Characters.Add(character);
+        
         await _ctx.SaveChangesAsync();
-        return savedCharacter.Entity;
+        return _mapper.Map<CharacterResponseDto>(savedCharacter.Entity);
     }
 
-    public async Task<Character?> DeleteCharacter(Guid id)
+    public async Task<CharacterResponseDto?> DeleteCharacter(Guid id)
     {
-        var existingCharacter = await _ctx.Characters.FindAsync(id);
+        var existingCharacter = await _ctx.Characters.FirstOrDefaultAsync(
+            c => c.User != null && c.Id == id && c.User.Id == GetUserId());
         if (existingCharacter is null)
         {
             return null;
         }
         _ctx.Characters.Remove(existingCharacter);
         await _ctx.SaveChangesAsync();
-        return existingCharacter;
+        return _mapper.Map<CharacterResponseDto>(existingCharacter);
     }
 
-    public async Task<Character?> GetCharacterById(Guid id)
+    public async Task<CharacterResponseDto?> GetCharacterById(Guid id)
     {
-        return await _ctx.Characters.FindAsync(id);
+        var character = await _ctx.Characters.FirstOrDefaultAsync(
+            c => c.User != null && c.Id == id && c.User.Id == GetUserId());
+        return _mapper.Map<CharacterResponseDto>(character);
     }
 
-    public async Task<List<Character>> GetCharacters()
+    public Task<List<CharacterResponseDto>> GetAllCharacters()
     {
-        return await _ctx.Characters.ToListAsync();
+        return _ctx.Characters
+            .Where(c => c.User != null && c.User.Id  == GetUserId())
+            .Select(c => _mapper.Map<CharacterResponseDto>(c))
+            .ToListAsync();
     }
 
-    public async Task<Character?> UpdateCharacter(Guid id, CharacterRequestDto character)
+    public async Task<CharacterResponseDto?> UpdateCharacter(Guid id, CharacterRequestDto updatedCharacter)
     {
         if (!await _ctx.Characters.AnyAsync(c => c.Id == id))
         {
             return null;
         }
         
-        var toBeUpdatedCharacter = _mapper.Map<Character>(character);
+        var toBeUpdatedCharacter = _mapper.Map<Character>(updatedCharacter);
         toBeUpdatedCharacter.Id = id;
-        var updatedCharacter = _ctx.Characters.Update(toBeUpdatedCharacter);
+        var character = _ctx.Characters.Update(toBeUpdatedCharacter);
         await _ctx.SaveChangesAsync();
-        return updatedCharacter.Entity;
+        return _mapper.Map<CharacterResponseDto>(character.Entity);
     }
+
+    private Guid GetUserId() =>
+        Guid.Parse(_httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty);
 }

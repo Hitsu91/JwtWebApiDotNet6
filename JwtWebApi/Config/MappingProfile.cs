@@ -10,5 +10,7 @@ public class MappingProfile : Profile
     {
         CreateMap<Character, CharacterRequestDto>();
         CreateMap<CharacterRequestDto, Character>();
+        CreateMap<Character, CharacterResponseDto>();
+        CreateMap<CharacterResponseDto, Character>();
     }
 }

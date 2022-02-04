@@ -1,11 +1,14 @@
-﻿using JwtWebApi.DTOs.Character;
+﻿using System.Security.Claims;
+using JwtWebApi.DTOs.Character;
 using JwtWebApi.Models;
 using JwtWebApi.Services.CharacterService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JwtWebApi.Controllers;
 
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class CharacterController : ControllerBase
@@ -22,7 +25,7 @@ public class CharacterController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<Character>>> GetAll()
     {
-        return Ok(await _characterService.GetCharacters());
+        return Ok(await _characterService.GetAllCharacters());
     }
 
     [HttpGet("{id:guid}")]
@@ -31,7 +34,7 @@ public class CharacterController : ControllerBase
         var character = await _characterService.GetCharacterById(id);
         if (character is null)
         {
-            return NotFound();
+            return NotFound($"You don't have a character with id {id}");
         }
         return Ok(character);
     }
