@@ -8,56 +8,56 @@ namespace JwtWebApi.Services.CharacterService;
 
 public class CharacterService : ICharacterService
 {
-    private readonly DataContext ctx;
-    private readonly IMapper mapper;
+    private readonly DataContext _ctx;
+    private readonly IMapper _mapper;
 
     public CharacterService(DataContext ctx, IMapper mapper)
     {
-        this.ctx = ctx;
-        this.mapper = mapper;
+        _ctx = ctx;
+        _mapper = mapper;
     }
 
     public async Task<Character> AddCharacter(CharacterRequestDto character)
     {
-        var newCharacter = mapper.Map<Character>(character);
-        var savedCharacter = ctx.Characters.Add(newCharacter);
-        await ctx.SaveChangesAsync();
+        var newCharacter = _mapper.Map<Character>(character);
+        var savedCharacter = _ctx.Characters.Add(newCharacter);
+        await _ctx.SaveChangesAsync();
         return savedCharacter.Entity;
     }
 
     public async Task<Character?> DeleteCharacter(Guid id)
     {
-        var existingCharacter = await ctx.Characters.FindAsync(id);
+        var existingCharacter = await _ctx.Characters.FindAsync(id);
         if (existingCharacter is null)
         {
             return null;
         }
-        ctx.Characters.Remove(existingCharacter);
-        await ctx.SaveChangesAsync();
+        _ctx.Characters.Remove(existingCharacter);
+        await _ctx.SaveChangesAsync();
         return existingCharacter;
     }
 
     public async Task<Character?> GetCharacterById(Guid id)
     {
-        return await ctx.Characters.FindAsync(id);
+        return await _ctx.Characters.FindAsync(id);
     }
 
     public async Task<List<Character>> GetCharacters()
     {
-        return await ctx.Characters.ToListAsync();
+        return await _ctx.Characters.ToListAsync();
     }
 
     public async Task<Character?> UpdateCharacter(Guid id, CharacterRequestDto character)
     {
-        if (!await ctx.Characters.AnyAsync(c => c.Id == id))
+        if (!await _ctx.Characters.AnyAsync(c => c.Id == id))
         {
             return null;
         }
         
-        var toBeUpdatedCharacter = mapper.Map<Character>(character);
+        var toBeUpdatedCharacter = _mapper.Map<Character>(character);
         toBeUpdatedCharacter.Id = id;
-        var updatedCharacter = ctx.Characters.Update(toBeUpdatedCharacter);
-        await ctx.SaveChangesAsync();
+        var updatedCharacter = _ctx.Characters.Update(toBeUpdatedCharacter);
+        await _ctx.SaveChangesAsync();
         return updatedCharacter.Entity;
     }
 }

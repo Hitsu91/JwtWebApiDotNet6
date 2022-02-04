@@ -14,13 +14,13 @@ namespace JwtWebApi.Controllers;
 [ApiController]
 public class AuthController : ControllerBase
 {
-    private readonly ILogger<AuthController> logger;
-    private readonly IAuthService authService;
+    private readonly ILogger<AuthController> _logger;
+    private readonly IAuthService _authService;
 
     public AuthController(ILogger<AuthController> logger, IAuthService authService)
     {
-        this.logger = logger;
-        this.authService = authService;
+        _logger = logger;
+        _authService = authService;
     }
 
     [HttpPost("register")]
@@ -28,7 +28,7 @@ public class AuthController : ControllerBase
     {
         try
         {
-            return Ok(authService.Register(request));
+            return Ok(_authService.Register(request));
         }
         catch (Exception ex)
         {
@@ -41,7 +41,7 @@ public class AuthController : ControllerBase
     {
         try
         {
-            return Ok(authService.Login(request));
+            return Ok(_authService.Login(request));
         }
         catch (Exception ex)
         {

@@ -1,10 +1,9 @@
-using AutoMapper;
-using JwtWebApi.Config;
 using JwtWebApi.Data;
 using JwtWebApi.Services.AuthService;
 using JwtWebApi.Services.CharacterService;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.InMemory;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +20,16 @@ builder.Services.AddDbContext<DataContext>(
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        var key = builder.Configuration["AppSettings:Token"];
+        options.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(key))
+        };
+    });
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICharacterService, CharacterService>();

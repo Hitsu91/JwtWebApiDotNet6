@@ -10,25 +10,25 @@ namespace JwtWebApi.Controllers;
 [ApiController]
 public class CharacterController : ControllerBase
 {
-    private readonly ICharacterService characterService;
-    private readonly ILogger<CharacterController> logger;
+    private readonly ICharacterService _characterService;
+    private readonly ILogger<CharacterController> _logger;
 
     public CharacterController(ICharacterService characterService, ILogger<CharacterController> logger)
     {
-        this.characterService = characterService;
-        this.logger = logger;
+        _characterService = characterService;
+        _logger = logger;
     }
 
     [HttpGet]
     public async Task<ActionResult<List<Character>>> GetAll()
     {
-        return Ok(await characterService.GetCharacters());
+        return Ok(await _characterService.GetCharacters());
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:guid}")]
     public async Task<ActionResult<Character>> GetById([FromRoute] Guid id)
     {
-        var character = await characterService.GetCharacterById(id);
+        var character = await _characterService.GetCharacterById(id);
         if (character is null)
         {
             return NotFound();
@@ -39,13 +39,13 @@ public class CharacterController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Character>> Add([FromBody] CharacterRequestDto character)
     {
-        return Ok(await characterService.AddCharacter(character));
+        return Ok(await _characterService.AddCharacter(character));
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{id:guid}")]
     public async Task<ActionResult<Character>> Update([FromRoute] Guid id, CharacterRequestDto character)
     { 
-        var updatedCharacter = await characterService.UpdateCharacter(id, character);
+        var updatedCharacter = await _characterService.UpdateCharacter(id, character);
         if (updatedCharacter is null)
         {
             return NotFound();
@@ -55,10 +55,10 @@ public class CharacterController : ControllerBase
     }
 
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:guid}")]
     public async Task<ActionResult<Character>> DeleteById([FromRoute] Guid id)
     {
-        var deletedCharacter = await characterService.DeleteCharacter(id);
+        var deletedCharacter = await _characterService.DeleteCharacter(id);
         if (deletedCharacter is null)
         {
             return NotFound();

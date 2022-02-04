@@ -12,7 +12,7 @@ public class CharacterRequestDto
     public int HitPoints { get; set; } = default;
 
     [Range(1, 1000)]
-    public int Strenght { get; set; } = default;
+    public int Strength { get; set; } = default;
 
     [Range(1, 1000)]
     public int Defence { get; set; } = default;
