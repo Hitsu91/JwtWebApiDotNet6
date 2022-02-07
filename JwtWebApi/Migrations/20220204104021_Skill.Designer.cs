@@ -3,6 +3,7 @@ using System;
 using JwtWebApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JwtWebApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220204104021_Skill")]
+    partial class Skill
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.1");
@@ -83,20 +85,6 @@ namespace JwtWebApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Skills");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("be349114-0d0b-4f09-8c70-9443d36b405c"),
-                            Damage = 300,
-                            Name = "Fireball"
-                        },
-                        new
-                        {
-                            Id = new Guid("d28c1ddd-6240-41a8-8d81-73c3e57b94af"),
-                            Damage = 20,
-                            Name = "Frenzy"
-                        });
                 });
 
             modelBuilder.Entity("JwtWebApi.Models.User", b =>

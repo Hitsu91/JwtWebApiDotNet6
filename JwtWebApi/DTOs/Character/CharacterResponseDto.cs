@@ -1,4 +1,6 @@
-﻿using JwtWebApi.Models;
+﻿using JwtWebApi.DTOs.Skill;
+using JwtWebApi.DTOs.Weapon;
+using JwtWebApi.Models;
 
 namespace JwtWebApi.DTOs.Character;
 
@@ -17,4 +19,8 @@ public class CharacterResponseDto
     public int Intelligence { get; set; } = 10;
 
     public RpgClass Class { get; set; } = default;
+
+    public WeaponResponseDto? Weapon { get; set; }
+
+    public List<GetSkillDto> Skills { get; set; } = new();
 }

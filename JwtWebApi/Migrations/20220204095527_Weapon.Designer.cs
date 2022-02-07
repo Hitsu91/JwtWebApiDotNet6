@@ -3,6 +3,7 @@ using System;
 using JwtWebApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,27 +11,13 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JwtWebApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220204095527_Weapon")]
+    partial class Weapon
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.1");
-
-            modelBuilder.Entity("CharacterSkill", b =>
-                {
-                    b.Property<Guid>("CharactersId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("SkillsId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("CharactersId", "SkillsId");
-
-                    b.HasIndex("SkillsId");
-
-                    b.ToTable("CharacterSkill");
-                });
 
             modelBuilder.Entity("JwtWebApi.Models.Character", b =>
                 {
@@ -65,38 +52,6 @@ namespace JwtWebApi.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Characters");
-                });
-
-            modelBuilder.Entity("JwtWebApi.Models.Skill", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Damage")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Skills");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("be349114-0d0b-4f09-8c70-9443d36b405c"),
-                            Damage = 300,
-                            Name = "Fireball"
-                        },
-                        new
-                        {
-                            Id = new Guid("d28c1ddd-6240-41a8-8d81-73c3e57b94af"),
-                            Damage = 20,
-                            Name = "Frenzy"
-                        });
                 });
 
             modelBuilder.Entity("JwtWebApi.Models.User", b =>
@@ -144,21 +99,6 @@ namespace JwtWebApi.Migrations
                         .IsUnique();
 
                     b.ToTable("Weapons");
-                });
-
-            modelBuilder.Entity("CharacterSkill", b =>
-                {
-                    b.HasOne("JwtWebApi.Models.Character", null)
-                        .WithMany()
-                        .HasForeignKey("CharactersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("JwtWebApi.Models.Skill", null)
-                        .WithMany()
-                        .HasForeignKey("SkillsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("JwtWebApi.Models.Character", b =>

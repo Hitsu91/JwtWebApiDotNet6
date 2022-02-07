@@ -70,4 +70,10 @@ public class CharacterController : ControllerBase
         return Ok(deletedCharacter);
     }
 
+    [HttpPost("Skill")]
+    public async Task<ActionResult<CharacterResponseDto>> AddCharacterSkill(AddCharacterSkillDto newCharacterSKill)
+    {
+        return Ok(await _characterService.AddCharacterSkill(newCharacterSKill));
+    }
+
 }

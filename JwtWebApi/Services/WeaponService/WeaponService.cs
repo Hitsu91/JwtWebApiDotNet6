@@ -6,7 +6,7 @@ using JwtWebApi.DTOs.Weapon;
 using JwtWebApi.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace JwtWebApi.Services.Weapon;
+namespace JwtWebApi.Services.WeaponService;
 
 public class WeaponService : IWeaponService
 {
@@ -30,13 +30,18 @@ public class WeaponService : IWeaponService
         {
             return null;
         }
-        
+
         var weapon = new Weapon
         {
-            
-        }
+            Name = newWeapon.Name,
+            Damage = newWeapon.Damage,
+            Character = character
+        };
+
+        _ctx.Weapons.Add(weapon);
+        await _ctx.SaveChangesAsync();
         
-        return new CharacterResponseDto();
+        return _mapper.Map<CharacterResponseDto>(character);
     }
     
     private Guid GetUserId() =>

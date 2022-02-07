@@ -1,7 +1,7 @@
 ﻿using JwtWebApi.DTOs.Character;
 using JwtWebApi.DTOs.Weapon;
 
-namespace JwtWebApi.Services.Weapon;
+namespace JwtWebApi.Services.WeaponService;
 
 public interface IWeaponService
 {

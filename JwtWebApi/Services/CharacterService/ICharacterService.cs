@@ -14,4 +14,6 @@ public interface ICharacterService
     Task<CharacterResponseDto?> UpdateCharacter(Guid id, CharacterRequestDto updatedCharacter);
 
     Task<CharacterResponseDto?> DeleteCharacter(Guid id);
+
+    Task<CharacterResponseDto?> AddCharacterSkill(AddCharacterSkillDto newCharacterSkill);
 }
