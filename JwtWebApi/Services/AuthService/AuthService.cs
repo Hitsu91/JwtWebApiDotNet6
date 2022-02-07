@@ -69,7 +69,8 @@ public class AuthService : IAuthService
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Name, user.Username)
+            new Claim(ClaimTypes.Name, user.Username),
+            new Claim(ClaimTypes.Role, user.Role.ToString()),
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secret));
@@ -96,7 +97,7 @@ public class AuthService : IAuthService
         return hash.SequenceEqual(passwordHash);
     }
 
-    private (byte[] passwordHash, byte[] passwordSalt) HashPassword(string password)
+    public static (byte[] passwordHash, byte[] passwordSalt) HashPassword(string password)
     {
         using var hms = new HMACSHA512();
         var salt = hms.Key;

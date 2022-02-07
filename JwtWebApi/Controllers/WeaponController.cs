@@ -1,5 +1,6 @@
 ﻿using JwtWebApi.DTOs.Character;
 using JwtWebApi.DTOs.Weapon;
+using JwtWebApi.Models;
 using JwtWebApi.Services.WeaponService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,7 @@ public class WeaponController : ControllerBase
         _weaponService = weaponService;
     }
 
-    [HttpPost]
+    [HttpPost, Authorize(Roles = nameof(Role.Admin))]
     public async Task<ActionResult<CharacterResponseDto>> AddWeapon(WeaponRequestDto newWeapon)
     {
         return Ok(await _weaponService.AddWeapon(newWeapon));

@@ -1,4 +1,6 @@
-﻿namespace JwtWebApi.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace JwtWebApi.Models;
 
 public class User
 {
@@ -11,4 +13,12 @@ public class User
     public byte[] PasswordSalt { get; set; } = Array.Empty<byte>();
 
     public List<Character> Characters { get; set; } = new();
+    public Role Role { get; set; } = Role.User;
+}
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum Role
+{
+    User,
+    Admin
 }
